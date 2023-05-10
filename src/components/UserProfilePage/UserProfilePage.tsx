@@ -1,39 +1,61 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import './UserProfilePage.css';
-import {Header} from "../Header/Header";
+import { useParams } from 'react-router-dom';
 
 export const UserProfilePage: FC = () => {
-  return <>
-    <Header />
+  // todo функция склонения
 
+  const { login } = useParams();
+  const [user, setUser] = useState<any>({});
+  const [repos, setRepos] = useState<any[]>([]);
+  const [followers, setFollowers] = useState<number>();
+  const [following, setFollowing] = useState<number>();
+
+  React.useEffect(() => {
+    Promise.all([
+      fetch(`https://api.github.com/users/${login}`).then((response) => response.json()),
+      fetch(`https://api.github.com/users/${login}/followers?per_page=100`).then((response) => response.json()),
+      fetch(`https://api.github.com/users/${login}/following`).then((response) => response.json()),
+      fetch(`https://api.github.com/users/${login}/repos`).then((response) => response.json()),
+    ]).then((responses) => {
+      setUser(responses[0]);
+      setFollowers(responses[1].length);
+      setFollowing(responses[2].length);
+      setRepos(responses[3]);
+    });
+  }, []);
+
+  const reposUrl = `${user.html_url}?tab=repositories`
+
+  return (
     <main>
       <div className="container">
         <section className="user-profile">
           <div className="user-profile__image-container">
-            <img className="user-profile__image" src="http://placeimg.com/640/480/any" alt="defunkt profile photo"/>
+            <img className="user-profile__image" src={user.avatar_url} alt="defunkt profile photo"/>
           </div>
           <div className="user-profile__content">
-            <h1 className="user-profile__title">Chris Wanstrath, <span className="user-profile__accent">defunct</span></h1>
-            <p className="user-profile__text"><span className="user-profile__accent">21.3k</span> followers · <span className="user-profile__accent">210</span> following · <a href="http://chriswanstrath.com/" className="link">http://chriswanstrath.com/</a></p>
+            <h1 className="user-profile__title">{user.name}, <span className="user-profile__accent">{user.login}</span></h1>
+            <p className="user-profile__text"><span className="user-profile__accent">{followers}</span> Подписчиков · <span className="user-profile__accent">{following}</span> Подписок · <a href={user.html_url} className="link">{user.html_url}</a></p>
           </div>
         </section>
 
         <section className="repository-list">
           <div className="repository-list__header">
             <h2 className="repository-list__title">Репозитории</h2>
-            <a href="https://github.com/defunkt?tab=repositories" className="link" target="_blank">Все репозитории</a>
+            <a href={reposUrl} className="link" target="_blank">Все репозитории</a>
           </div>
 
           <div className="repository-list__container">
-            {[1, 2, 3, 4, 5].map((item) => (
-                <section className="repository-list__item" key={item}>
-                  <h3 className="repository-list__item-title"><a href="/" className="link">body_matcher</a></h3>
-                  <p className="repository-list__item-text">Simplify your view testing. Forget assert_select.</p>
+            {repos.map((item) => (
+                <section className="repository-list__item" key={item.id}>
+                  <h3 className="repository-list__item-title"><a href={item.html_url} className="link">{item.name}</a></h3>
+                  <p className="repository-list__item-text">{item.description}</p>
                 </section>
             ))}
           </div>
         </section>
       </div>
     </main>
-  </>;
+  )
 };
