@@ -1,0 +1,6 @@
+[*] // настройка для всех типов файлов
+indent_style = space
+indent_size = 2
+
+[*.html] // отдельная настройка для html файлов
+indent_size = 4
