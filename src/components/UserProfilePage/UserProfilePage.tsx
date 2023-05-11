@@ -9,20 +9,14 @@ export const UserProfilePage: FC = () => {
   const { login } = useParams();
   const [user, setUser] = useState<UserApi | null>(null);
   const [repos, setRepos] = useState<ReposApi[] | null>(null);
-  const [followers, setFollowers] = useState<number | null>(null);
-  const [following, setFollowing] = useState<number | null>(null);
 
   React.useEffect(() => {
     Promise.all([
       fetch(`https://api.github.com/users/${login}`).then((response) => response.json()),
-      fetch(`https://api.github.com/users/${login}/followers?per_page=100`).then((response) => response.json()),
-      fetch(`https://api.github.com/users/${login}/following`).then((response) => response.json()),
       fetch(`https://api.github.com/users/${login}/repos`).then((response) => response.json()),
     ]).then((responses) => {
       setUser(responses[0]);
-      setFollowers(responses[1].length);
-      setFollowing(responses[2].length);
-      setRepos(responses[3]);
+      setRepos(responses[1]);
     });
   }, []);
 
@@ -40,8 +34,30 @@ export const UserProfilePage: FC = () => {
               {user?.name}, <span className="user-profile__accent">{user?.login}</span>
             </h1>
             <p className="user-profile__text">
-              <span className="user-profile__accent">{followers}</span> Подписчиков ·{' '}
-              <span className="user-profile__accent">{following}</span> Подписок ·{' '}
+              {user?.followers && (
+                <>
+                  <span className="user-profile__accent">
+                    {new Intl.NumberFormat('en-US', {
+                      notation: 'compact',
+                      maximumFractionDigits: 2,
+                      compactDisplay: 'short',
+                    }).format(user?.followers)}
+                  </span>
+                  &nbsp;Подписчиков ·&nbsp;
+                </>
+              )}
+              {user?.following && (
+                <>
+                  <span className="user-profile__accent">
+                    {new Intl.NumberFormat('en-US', {
+                      notation: 'compact',
+                      maximumFractionDigits: 2,
+                      compactDisplay: 'short',
+                    }).format(user?.following)}
+                  </span>
+                  &nbsp;Подписок ·&nbsp;
+                </>
+              )}
               <a href={user?.html_url} className="link">
                 {user?.html_url}
               </a>

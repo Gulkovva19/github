@@ -8,6 +8,8 @@ export interface UserApi {
   avatar_url: string;
   name: string;
   login: string;
+  followers?: number
+  following?: number
 }
 export interface ReposApi {
   id: number;
