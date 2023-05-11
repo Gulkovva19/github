@@ -4,7 +4,7 @@ const TOKEN = GITHUB_API_TOKEN;
 
 export const GITHUB_API_SETTINGS = {
   headers: {
-    Accept: 'application/vnd.github+json',
-    Authorization: `${TOKEN}`,
+    Accept: 'application/json',
+    Authorization: `Bearer ${TOKEN}`,
   },
 };

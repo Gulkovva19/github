@@ -5,8 +5,6 @@ import { ReposApi, UserApi } from '../../types';
 import { GITHUB_API_SETTINGS } from '../../api/github';
 
 export const UserProfilePage: FC = () => {
-  // todo функция склонения
-
   const { login } = useParams();
   const [user, setUser] = useState<UserApi | null>(null);
   const [repos, setRepos] = useState<ReposApi[] | null>(null);

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const UsersList: FC<Props> = ({ users }) => {
-  const [repos, setRepos] = useState<UsersApi[] | null>(null);
+  const [repos, setRepos] = useState<number[]>([]);
   const [org, setOrg] = useState<string[]>([]);
 
   const arrLogin = users?.map((user) => {
@@ -18,21 +18,17 @@ export const UsersList: FC<Props> = ({ users }) => {
 
   useEffect(() => {
     const arrFetchUsers = arrLogin?.map((login) =>
-      fetch(`https://api.github.com/users/${login}/orgs`, GITHUB_API_SETTINGS)
+      fetch(`https://api.github.com/users/${login}`, GITHUB_API_SETTINGS)
       .then((response) => response.json())
     );
     
     if (arrFetchUsers)
     Promise.all(arrFetchUsers)
       .then((responses) => {
-        const arrFirstOrg = responses.map((item) => item[0])
-        const arrOrgLogin = arrFirstOrg.map((item => item?.login))
-        const arrOrg = arrOrgLogin.map((item => {
-          if (item === undefined) 
-          return '' 
-          else return item;
-        }))
-        setOrg(arrOrg);
+        const arrCompany = responses.map((item) => item.company)
+        const arrReposNumber = responses.map((item) => item.public_repos)
+        setOrg(arrCompany);
+        setRepos(arrReposNumber);
       })
   }, [users]);
 
@@ -48,8 +44,9 @@ export const UsersList: FC<Props> = ({ users }) => {
               <Link to={`/users/${user.login}`} className="link">
                 {user.login}
               </Link>
+              , <div>{repos[users.indexOf(user)]} репозиториев</div>
             </h2>
-            <p className="users-list__text"key={org[users.indexOf(user)]} >{org[users.indexOf(user)]}</p>
+            <p className="users-list__text">{org[users.indexOf(user)]}</p>
           </div>
         </section>
       ))}
