@@ -1,15 +1,16 @@
 import React, { FC, useState } from 'react';
 import './UserProfilePage.css';
 import { useParams } from 'react-router-dom';
+import { ReposApi, UserApi } from '../../types';
 
 export const UserProfilePage: FC = () => {
   // todo функция склонения
 
   const { login } = useParams();
-  const [user, setUser] = useState<any>({});
-  const [repos, setRepos] = useState<any[]>([]);
-  const [followers, setFollowers] = useState<number>();
-  const [following, setFollowing] = useState<number>();
+  const [user, setUser] = useState<UserApi | null>(null);
+  const [repos, setRepos] = useState<ReposApi[] | null>(null);
+  const [followers, setFollowers] = useState<number | null>(null);
+  const [following, setFollowing] = useState<number | null>(null);
 
   React.useEffect(() => {
     Promise.all([
@@ -25,24 +26,24 @@ export const UserProfilePage: FC = () => {
     });
   }, []);
 
-  const reposUrl = `${user.html_url}?tab=repositories`;
+  const reposUrl = `${user?.html_url}?tab=repositories`;
 
   return (
     <main>
       <div className="container">
         <section className="user-profile">
           <div className="user-profile__image-container">
-            <img className="user-profile__image" src={user.avatar_url} alt="defunkt profile photo" />
+            <img className="user-profile__image" src={user?.avatar_url} alt="defunkt profile photo" />
           </div>
           <div className="user-profile__content">
             <h1 className="user-profile__title">
-              {user.name}, <span className="user-profile__accent">{user.login}</span>
+              {user?.name}, <span className="user-profile__accent">{user?.login}</span>
             </h1>
             <p className="user-profile__text">
               <span className="user-profile__accent">{followers}</span> Подписчиков ·{' '}
               <span className="user-profile__accent">{following}</span> Подписок ·{' '}
-              <a href={user.html_url} className="link">
-                {user.html_url}
+              <a href={user?.html_url} className="link">
+                {user?.html_url}
               </a>
             </p>
           </div>
@@ -57,7 +58,7 @@ export const UserProfilePage: FC = () => {
           </div>
 
           <div className="repository-list__container">
-            {repos.map((item) => (
+            {repos?.map((item) => (
               <section className="repository-list__item" key={item.id}>
                 <h3 className="repository-list__item-title">
                   <a href={item.html_url} className="link">

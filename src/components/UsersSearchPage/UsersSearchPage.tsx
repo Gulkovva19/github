@@ -4,7 +4,7 @@ import { UsersApi } from '../../types';
 import { useSearchParams } from 'react-router-dom';
 
 export const UsersSearchPage: FC = () => {
-  const [users, setUsers] = useState<UsersApi[]>([]);
+  const [users, setUsers] = useState<UsersApi[] | null>(null);
   const [searchParams] = useSearchParams();
 
   const searchLogin = searchParams.get('query');

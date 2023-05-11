@@ -3,7 +3,7 @@ import { UsersList } from '../UsersList/UsersList';
 import { UsersApi } from '../../types';
 
 export const UsersPage: FC = () => {
-  const [users, setUsers] = useState<UsersApi[]>([]);
+  const [users, setUsers] = useState<UsersApi[] | null>(null);
 
   React.useEffect(() => {
     fetch(' https://api.github.com/users')

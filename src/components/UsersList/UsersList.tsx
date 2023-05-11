@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { UsersApi } from '../../types';
 
 interface Props {
-  users: UsersApi[];
+  users: UsersApi[] | null;
 }
 
 export const UsersList: FC<Props> = ({ users }) => {
@@ -13,7 +13,7 @@ export const UsersList: FC<Props> = ({ users }) => {
 
   return (
     <div className="users-list">
-      {users.map((user) => (
+      {users?.map((user) => (
         <section className="users-list__item" key={user.id}>
           <div className="users-list__image-container">
             <img className="users-list__image" src={user.avatar_url} alt="profile photo" />
