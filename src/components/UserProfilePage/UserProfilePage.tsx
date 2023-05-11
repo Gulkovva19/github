@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import './UserProfilePage.css';
 import { useParams } from 'react-router-dom';
 import { ReposApi, UserApi } from '../../types';
+import { GITHUB_API_SETTINGS } from '../../api/github';
 
 export const UserProfilePage: FC = () => {
   // todo функция склонения
@@ -12,8 +13,8 @@ export const UserProfilePage: FC = () => {
 
   React.useEffect(() => {
     Promise.all([
-      fetch(`https://api.github.com/users/${login}`).then((response) => response.json()),
-      fetch(`https://api.github.com/users/${login}/repos`).then((response) => response.json()),
+      fetch(`https://api.github.com/users/${login}`, GITHUB_API_SETTINGS).then((response) => response.json()),
+      fetch(`https://api.github.com/users/${login}/repos`, GITHUB_API_SETTINGS).then((response) => response.json()),
     ]).then((responses) => {
       setUser(responses[0]);
       setRepos(responses[1]);

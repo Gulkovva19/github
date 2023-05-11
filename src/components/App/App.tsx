@@ -21,6 +21,7 @@ export const App: FC = () => {
           <Route path="/users" element={<UsersPage />} />
           <Route path="/users/:login" element={<UserProfilePage />} />
           <Route path="/search" element={<UsersSearchPage />} />
+          <Route path="*" element={<UsersPage />} />
         </Routes>
       </main>
     </React.Fragment>
