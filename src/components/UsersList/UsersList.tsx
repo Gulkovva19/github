@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import './UsersList.css';
 import { Link } from 'react-router-dom';
-import { UserApi, UsersApi } from '../../types';
+import { UsersApi } from '../../types';
 import { GITHUB_API_SETTINGS } from '../../api/github';
 
 interface Props {
